@@ -44,6 +44,10 @@
       cursor: pointer;
     }
 
+    a {
+      color: inherit;
+    }
+
     .hide {
       display: none !important;
     }
@@ -53,6 +57,7 @@
       font-size: 46px;
       letter-spacing: -3px;
       line-height: 1;
+      white-space: nowrap;
     }
 
     .logo .u {
@@ -102,13 +107,13 @@
     }
 
     .topbar {
-      height: 78px;
+      min-height: 78px;
       background: var(--blue);
       color: #fff;
       display: flex;
       align-items: center;
-      gap: 20px;
-      padding: 0 28px;
+      gap: 18px;
+      padding: 12px 28px;
       position: sticky;
       top: 0;
       z-index: 1000;
@@ -116,12 +121,33 @@
 
     .tag {
       flex: 1;
-      font-size: 21px;
+      font-size: 20px;
       font-weight: 800;
+      min-width: 260px;
+    }
+
+    .header-library-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      color: var(--blue);
+      border: 0;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .header-library-btn:hover {
+      background: #f2f7fb;
     }
 
     .quick {
       display: flex;
+      align-items: center;
       gap: 8px;
     }
 
@@ -137,6 +163,7 @@
       border-radius: 8px;
       font-size: 13px;
       font-weight: 800;
+      white-space: nowrap;
     }
 
     .quick img {
@@ -169,6 +196,7 @@
 
     .side-title p {
       color: #777;
+      line-height: 1.35;
     }
 
     .nav {
@@ -763,6 +791,10 @@
         display: none;
       }
 
+      .header-library-btn {
+        margin-left: auto;
+      }
+
       .hub-body {
         grid-template-columns: 1fr;
         overflow: auto;
@@ -821,18 +853,29 @@
 <body>
   <section id="appPage" class="app-page">
     <header class="topbar">
-      <div class="logo">LSB<span class="u">U</span>D<small>SAFE DIGGING FOR ALL</small></div>
+      <div class="logo">
+        LSB<span class="u">U</span>D
+        <small>SAFE DIGGING FOR ALL</small>
+      </div>
+
       <div class="tag">Dig Safe Portal - powered by OneCall utility search</div>
 
-      <nav class="quick">
+      <button class="header-library-btn" onclick="goToLibrary()">Go to Library</button>
+
+      <nav class="quick" aria-label="Quick links">
         https://lsbud.co.uk/
-          https://www.google.com/s2/favicons?domain=lsbud.co.uk&sz=32LSBUD
+          https://www.google.com/s2/favicons?domain=lsbud.co.uk&sz=32
+          LSBUD
         </a>
+
         https://www.utilitystrikeavoidancegroup.org/
-          https://www.google.com/s2/favicons?domain=utilitystrikeavoidancegroup.org&sz=32USAG
+          https://www.google.com/s2/favicons?domain=utilitystrikeavoidancegroup.org&sz=32
+          USAG
         </a>
+
         <a href="https://portal.nuar.uk/" target="_blank" rel="noopener">
-          https://www.google.com/s2/favicons?domain=portal.nuar.uk&sz=32NUAR
+          https://www.google.com/s2/favicons?domain=portal.nuar.uk&sz=32
+          NUAR
         </a>
       </nav>
     </header>
@@ -846,7 +889,7 @@
 
         <div class="nav active"><div>⌂</div><div>Home</div></div>
         <div class="nav" onclick="openHub()"><div>＋</div><div>Start Journey</div></div>
-        <div class="nav" onclick="showLibraryFromHome()"><div>▤</div><div>Guidance Library</div></div>
+        <div class="nav" onclick="goToLibrary()"><div>▤</div><div>Guidance Library</div></div>
         <div class="nav"><div>✓</div><div>OneCall Search</div></div>
         <div class="nav"><div>⚠</div><div>Risk & Guidance</div></div>
         <div class="nav"><div>▣</div><div>Reports & Evidence</div></div>
@@ -884,7 +927,6 @@
             </div>
 
             <button class="btn home-start" onclick="openHub()">Start Journey</button>
-            <button class="btn home-start" onclick="showLibraryFromHome()">Go to Library</button>
           </article>
         </section>
 
@@ -1192,6 +1234,18 @@
 
     function types() {
       return categoryTypes[enquiry.category] || [];
+    }
+
+    function goToLibrary() {
+      const hub = document.getElementById("hub");
+
+      if (!hub.classList.contains("open")) {
+        openHub();
+      }
+
+      setTimeout(() => {
+        showLibrary();
+      }, 0);
     }
 
     function openHub() {
@@ -1760,10 +1814,10 @@
       document.getElementById("post").innerHTML = `
         <div class="ref">
           <span>${esc(enquiry.enquiryType)}</span>
-          <strong>${esc(enquiry.generatedReference)}</strong>
+          <strong>${esc(enquiry.generatedReference || "—")}</strong>
         </div>
 
-        <div id="miniMap" class="mini"></div>
+        ${currentLayer ? `<div id="miniMap" class="mini"></div>` : ""}
 
         <div class="post-step">
           <div class="circle done"></div>
@@ -1773,13 +1827,19 @@
           </div>
         </div>
 
-        <div class="post-step">
-          <div class="circle done"></div>
-          <div>
-            <h3>Dig site location</h3>
-            <p>${currentGeometryType === "line" ? currentLengthKm.toFixed(2) + " km route" : currentAreaHa.toFixed(2) + " ha site"} captured as WKT</p>
-          </div>
-        </div>
+        ${
+          currentWKT
+            ? `
+              <div class="post-step">
+                <div class="circle done"></div>
+                <div>
+                  <h3>Dig site location</h3>
+                  <p>${currentGeometryType === "line" ? currentLengthKm.toFixed(2) + " km route" : currentAreaHa.toFixed(2) + " ha site"} captured as WKT</p>
+                </div>
+              </div>
+            `
+            : ""
+        }
 
         <div class="read">
           <label>Enquiry type</label>
@@ -1802,7 +1862,9 @@
         </div>
       `;
 
-      setTimeout(initMini, 100);
+      if (currentLayer) {
+        setTimeout(initMini, 100);
+      }
     }
 
     async function initMini() {
@@ -1946,10 +2008,6 @@
           Enquiry reference allocated: ${esc(enquiry.generatedReference)}. OneCall is included as the mandatory core search.
         </div>
 
-        <div class="basket-actions">
-          <button class="btn btn-outline" onclick="showLibrary()">Go to Library</button>
-        </div>
-
         <div class="cards">
           ${services.map(card).join("")}
         </div>
@@ -2028,7 +2086,6 @@
 
             <div class="actions" style="justify-content:flex-start">
               <button class="btn btn-outline" onclick="showRecommendations()">Add more services</button>
-              <button class="btn btn-outline" onclick="showLibrary()">Go to Library</button>
             </div>
           </div>
 
@@ -2135,11 +2192,6 @@
       alert("Prototype: " + service + " opened/requested for reference " + enquiry.generatedReference + ".");
     }
 
-    function showLibraryFromHome() {
-      openHub();
-      showLibrary();
-    }
-
     function showLibrary() {
       progress("recommendations");
 
@@ -2172,11 +2224,11 @@
       return [
         {
           title: "Householder safe digging checklist",
-          desc: "Plain-English checklist for small domestic works, fence posts, gates, garden projects and driveways."
+          desc: "Plain-English checklist for domestic works, fence posts, gates, gardens and driveways."
         },
         {
           title: "PAS128 summary guide",
-          desc: "Short overview of PAS128 survey types, when utility detection may be needed, and what level of confidence means."
+          desc: "Overview of PAS128 survey types and when utility detection may be needed."
         },
         {
           title: "HSG47 excavation guidance summary",
@@ -2184,11 +2236,11 @@
         },
         {
           title: "Fencing and gates guidance",
-          desc: "Guidance for post installation, boundary works and avoiding underground services near property boundaries."
+          desc: "Guidance for post installation, boundary works and avoiding underground services."
         },
         {
           title: "Planning and environmental resource pack",
-          desc: "Links and prompts for planning constraints, protected areas, watercourses and environmental review."
+          desc: "Planning constraints, protected areas, watercourses and environmental review prompts."
         },
         {
           title: "Watercourses and drainage guidance",
@@ -2196,7 +2248,7 @@
         },
         {
           title: "Utility works guidance",
-          desc: "Guidance for utility connections, linear projects, trenching, drilling and higher-risk excavation methods."
+          desc: "Guidance for utility connections, trenching, drilling and higher-risk excavation methods."
         },
         {
           title: "Emergency works prompts",
