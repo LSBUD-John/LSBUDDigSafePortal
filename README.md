@@ -1,12 +1,19 @@
-# LSBUD Dig Safe Portal
+# LSBUD Foresight
+Smarter Insights. Safer Sites.
 
 ## Purpose
 
-The **LSBUD Dig Safe Portal** is a proposed LSBUD-owned Safe Digging Hub with **OneCall embedded as the required core search service**.
+**LSBUD Foresight** is a proposed LSBUD-owned Safe Digging Hub with **OneCall embedded as the required core search service**.
 
 The strategic intent is to protect the value of OneCall, avoid heavy dependency on Pelican Corp front-end redevelopment, and give LSBUD the strategic platform needed to become the **UK’s de facto Safe Digging Hub**.
 
 LSBUD owns the new portal, user journey, value-add service layer and account experience. OneCall remains the branded, mandatory core search service, integrated through API, secure handoff, or a controlled embedded component.
+
+Hindsight — historical records, legacy plans, previous surveys, incident learning.
+Insight — current site context, curated guidance, compliance, risk awareness.
+Foresight — preventing incidents before work starts, supporting future VAR planning and proactive safe digging decisions.
+
+That is much stronger than “Dig Safe Portal” as a product name, because Foresight suggests a forward-looking risk engine, not simply a search or document library.
 
 ## Strategic Positioning
 
