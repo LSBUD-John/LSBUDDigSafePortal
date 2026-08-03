@@ -1,4 +1,4 @@
-# LSBUD Foresight
+# LSBUD Insight
 Smarter Insights. Safer Sites.
 
 ## Purpose
